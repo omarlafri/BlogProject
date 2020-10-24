@@ -19,7 +19,7 @@
 
 
 								<!-- ITEMS -->
-									<tr v-for="(tag,i) in tags " :key="i" v-if="tags.length">
+									<tr v-for="(tag,i) in tags " :key="i" :v-if="tags.length">
 								<td>{{tag.id}}</td>
 								<td><strong> {{tag.tagName}}</strong></td>
 								<td>{{tag.created_at}}</td>
@@ -63,7 +63,7 @@
     </Modal>
 
 		<!-- Delete tag Modal -->
-
+<!-- 
 	   <Modal v-model="deleteModal" width="360">
         <p slot="header" style="color:#f60;text-align:center">
             <Icon type="ios-information-circle"></Icon>
@@ -76,7 +76,8 @@
         <div slot="footer">
             <Button type="error" size="large" long :disabled="isDeleting" :loading="isDeleting" @click="deleteTag">Delete</Button>
         </div>
-    </Modal>
+    </Modal> -->
+	<deleteModal></deleteModal>
 
 
 	
@@ -93,7 +94,12 @@
 </template>
 
 <script>
+	import deleteModal from '../components/deleteModal';
+    import { mapGetters} from 'vuex';
+
+
 export default {
+
 	data(){
 		return{
 			data:{
@@ -122,6 +128,7 @@ export default {
 
 	methods:{
 	async	addTag(){
+		this.isAding=true
 			if(this.data.tagName.trim()==''){
 
 				return this.error('Oops','Tag name is required');
@@ -134,6 +141,8 @@ export default {
 					this.addModal=false
 					this.data.tagName=''
 				}
+		this.isAding=false
+
 			
 		},
 		async	editTag(){
@@ -158,28 +167,24 @@ export default {
 				
 			
 		},
-		async	deleteTag(){
-				this.isDeleting=true;
+		
+		// async	deleteTag(){
+		// 		this.isDeleting=true;
 			
-				const res = await this.callApi('post','app/delete_tag',this.deleteData)
-				if(res.status==200){
-					this.success('','Tag deleted succefuly')
-					this.tags.splice(this.deleteData.index,1)
-					this.deleteData.tagName='';
-					this.deleteData.id=0;
-					this.deleteData.index=-1;
+		// 		const res = await this.callApi('post','app/delete_tag',this.deleteData)
+		// 		if(res.status==200){
+		// 			this.success('','Tag deleted succefuly')
+		// 			this.tags.splice(this.deleteData.index,1)
+		// 			this.deleteData.tagName='';
+		// 			this.deleteData.id=0;
+		// 			this.deleteData.index=-1;
 
-
-
-				}
-				this.deleteModal=false;
-				this.isDeleting=false;
-
-
-
-				
+		// 		}
+		// 		this.deleteModal=false;
+		// 		this.isDeleting=false;
 			
-		},
+		// },
+
 		showEditModal(tag,i){
 
 			let obj={
@@ -189,29 +194,64 @@ export default {
 			this.editData=obj;
 			this.index=i;
 			this.editModal=true;
-
 		},
-			showDeleteModal(tag,i){
+		
+		showDeleteModal(tag,i){
 
-				this.deleteModal=true
-				this.$set(tag,'isDeleting',true)
-				let obj={
-					'tagName':tag.tagName,
-					'id':tag.id,
-					'index':i
+			const deleteModelObj= {
+					data:tag,
+					deleteUrl:'app/delete_tag',
+					showDeleteModal:true,
+					isDeleted:false,
+					type:'tag',
+					deleteIndex:i,
 				}
-				this.deleteData=obj
+
+           	 this.$store.commit('setDeleteModelObj',deleteModelObj)
+
+				
+
+				// this.deleteModal=true
+				// this.$set(tag,'isDeleting',true)
+				// let obj={
+				// 	'tagName':tag.tagName,
+				// 	'id':tag.id,
+				// 	'index':i
+				// }
+				// this.deleteData=obj
+
+
 
 		}
 
 	},
+
+	 computed:{
+        ...mapGetters(['getDeleteModelObj','getTags'])
+    },
+
+
 	async created(){
 				const res = await this.callApi('get','app/get_tags')
 				if(res.status==200){
 					this.tags=res.data;
+					this.$store.commit('setTags',res.data)
+					
 				}
 
+	},
 
+	watch:{
+
+		getTags(){
+			this.tags=this.getTags
+			
+		}
+
+		
+	},
+	components:{
+		deleteModal
 	}
 
 }

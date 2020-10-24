@@ -6,9 +6,12 @@ import firstPage from './components/pages/firstViewPage'
 import secondePage from './components/pages/secondViewPage'
 import hook from './components/pages/basics/hooks'
 import basic from './components/pages/basics/basic'
-import home from './components/pages/basics/home'
+import home from './admin/pages/home'
 import tags from './admin/pages/tags'
 import categories from './admin/pages/categories'
+
+import comc from './vuex/comC'
+
 
 
 
@@ -57,6 +60,12 @@ const routes=[
         path:'/hook',
 
         component:hook
+
+    },
+    {
+        path:'/comc',
+
+        component:comc
 
     },
     {

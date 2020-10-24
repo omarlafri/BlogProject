@@ -189,7 +189,7 @@
 
           <!-- Delete category Modal -->
 
-          <Modal v-model="deleteModal" width="360">
+          <!-- <Modal v-model="deleteModal" width="360">
             <p slot="header" style="color: #f60; text-align: center">
               <Icon type="ios-information-circle"></Icon>
               <span>Delete confirmation</span>
@@ -208,7 +208,8 @@
                 >Delete</Button
               >
             </div>
-          </Modal>
+          </Modal> -->
+          <deleteModal></deleteModal>
         </div>
       </div>
     </div>
@@ -216,6 +217,8 @@
 </template>
 
 <script>
+	import deleteModal from '../components/deleteModal';
+  import { mapGetters} from 'vuex';
 export default {
   data() {
     return {
@@ -345,14 +348,30 @@ export default {
       this.editNameModal = true;
     },
     showDeleteModal(category, i) {
-      this.deleteModal = true;
-      this.$set(category, "isDeleting", true);
-       let obj = {
-        id: category.id,
-        categoryName: category.categoryName,
+      // this.deleteModal = true;
+      // this.$set(category, "isDeleting", true);
+      //  let obj = {
+      //   id: category.id,
+      //   categoryName: category.categoryName,
        
-      };
-      this.deleteData = obj;
+      // };
+      // this.deleteData = obj;
+
+      const deleteModelObj= {
+					data:category,
+					deleteUrl:'app/delete_cat',
+					showDeleteModal:true,
+					isDeleted:false,
+					type:'category',
+					deleteIndex:i,
+				}
+
+              this.$store.commit('setDeleteModelObj',deleteModelObj)
+              
+              console.log(this.getDeleteModelObj)
+
+
+
     },
 
     async handleSuccess(res, file) {
@@ -441,7 +460,22 @@ export default {
     const res = await this.callApi("get", "app/get_categories");
     if (res.status == 200) {
       this.categories = res.data;
+      this.$store.commit('setCategories',res.data)
     }
   },
+   computed:{
+        ...mapGetters(['getDeleteModelObj','getShowDeleteModel','getCategories'])
+    },
+    components:{
+      deleteModal
+    },
+    watch:{
+
+		getCategories(){
+			this.tags=this.getCategories
+			
+		}
+	},
 };
+
 </script>
