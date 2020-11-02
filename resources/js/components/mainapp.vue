@@ -1,6 +1,6 @@
 <template>
 <div>
-
+  <div v-if="$store.state.user">
   <div>
       <!--========== ADMIN SIDE MENU one ========-->
       <div class="_1side_menu" >
@@ -20,8 +20,12 @@
           <div class="_1side_menu_list">
             <ul class="_1side_menu_list_ul">
               <li><router-link to="/home"><Icon type="ios-home-outline" /> Home</router-link></li>
-              <li><router-link to="/tags"> <Icon type="ios-speedometer-outline" /> Tags</router-link></li>
+              <li><router-link to="/tags"> <Icon type="ios-grid-outline" /> Tags</router-link></li>
               <li><router-link to="/categories"> <Icon type="ios-speedometer-outline" /> Categories</router-link></li>
+              <li><router-link to="/users"> <Icon type="ios-person-outline" /> Users</router-link></li>
+              <li><a href="/logout"> <Icon type="ios-exit-outline" /> Logout</a></li>
+
+
 
             </ul>
           </div>
@@ -44,8 +48,27 @@
       </div>
       <!--========= HEADER ==========-->
     </div>
-    	<router-view/>
+    	
 
+      </div>
+
+<router-view/>
 </div>
 
 </template>
+
+<script>
+export default {
+
+  props:['user'],
+  data(){
+    return{
+      loggedIn:false,
+    }
+  },
+  created(){
+    this.$store.commit('setUser',this.user)
+  }
+
+}
+</script>

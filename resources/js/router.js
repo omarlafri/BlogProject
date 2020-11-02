@@ -9,6 +9,9 @@ import basic from './components/pages/basics/basic'
 import home from './admin/pages/home'
 import tags from './admin/pages/tags'
 import categories from './admin/pages/categories'
+import users from './admin/pages/users'
+import login from './admin/pages/login'
+
 
 import comc from './vuex/comC'
 
@@ -40,6 +43,18 @@ const routes=[
         component:categories
 
     },
+    {
+        path:'/users',
+
+        component:users
+
+    },
+    {
+        path:'/login',
+
+        component:login
+
+    },
 
 
     //*************************************** */
@@ -68,6 +83,7 @@ const routes=[
         component:comc
 
     },
+    
     {
         path:'/basic',
 

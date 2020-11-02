@@ -46,7 +46,9 @@ export default {
 
             		this.isDeleting=true;
 			
-				const res = await this.callApi('post',this.getDeleteModelObj.deleteUrl,this.getDeleteModelObj.data)
+                const res = await this.callApi('post',this.getDeleteModelObj.deleteUrl,this.getDeleteModelObj.data)
+                console.log(res.status)
+                
 				if(res.status==200){
                     this.success('',this.getDeleteModelObj.type+' deleted succefuly')
                     this.$store.commit('setShowDeleteModal',false)
@@ -56,6 +58,10 @@ export default {
 
                 }
                   else{
+                      if(res.status==422){
+					for(let i in res.data.errors){
+						 this.error('Oops',res.data.errors[i]);
+					}}
         
                    this.error('','Tag  not deletet succefuly')
             		this.isDeleting=false;

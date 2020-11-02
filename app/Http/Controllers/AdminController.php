@@ -1,15 +1,41 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use App\Tag;
 use App\Category;
+use App\User;
+
 
 
 
 class AdminController extends Controller
 {
+
+  public function index(Request $request){
+
+    if(!Auth::check() && $request->path()!='login'){
+      return redirect('/login');
+
+    }
+   else if(Auth::check() && $request->path()=='login'){
+    return redirect('/home');
+    // return '2';
+    }
+    
+    else{
+      return view('welcome');
+
+    }
+
+    
+    
+
+
+
+  }
     public function addTag(Request $request){
 
         $this->validate($request,[
@@ -25,7 +51,27 @@ class AdminController extends Controller
 
 
     }
+  public function addUser(Request $request){
 
+        $this->validate($request,[
+            'fullName'=>'required',
+            'email'=>'required | email|unique:users',
+            'password'=>'required | min:6',
+            'userType'=>'required'
+
+            ]);
+
+
+            $user=new User;
+            $user->fullName=$request->fullName;
+            $user->email= $request->email;
+            $user->password=bcrypt($request->password);
+            $user->userType=$request->userType;
+            $user->save();
+            return $user ;
+
+
+    }
     public function editTag(Request $request){
 
         $this->validate($request,[
@@ -65,6 +111,18 @@ class AdminController extends Controller
 
          $this->removeFileFromServer( $cat->iconeImage);
          $cat->delete();
+          return 'done';
+
+        }
+        public function deleteUser(Request $request){
+
+            $this->validate($request,[
+                'id'=>'required'
+                ]);
+
+         $user= User::find($request->id);
+         $user->isActivated='1';
+         $user->save();
           return 'done';
 
         }
@@ -133,6 +191,13 @@ class AdminController extends Controller
 
     }
 
+     public function getUsers(Request $request){
+
+      return User::where(['isActivated'=>'0'])->orderBy('id','desc')->get();
+
+
+    }
+
     public function editCat(Request $request){
 
       $this->validate($request,[
@@ -154,6 +219,65 @@ class AdminController extends Controller
 
    return $cat;
 
+
+    }
+
+    public function editUser(Request $request){
+
+      $this->validate($request,[
+        'id'=>'required',
+        'fullName'=>'required',
+        'email'=>'required | email',
+        'userType'=>'required'
+
+        ]);
+
+        $user=User::find($request->id);
+
+
+        if($request->password!=''){
+          $this->validate($request,[
+            'password'=>'min:6'
+            ]);
+            $user->password=bcrypt($request->password);
+        }
+
+        $user->fullName=$request->fullName;
+        $user->email= $request->email;
+        $user->userType=$request->userType;
+        $user->save();
+
+        return $user;
+
+        
+
+
+
+    }
+
+    public function login(Request $request)
+    {
+      $this->validate($request,[
+        'email'=>'required | email',
+        'password'=>'required|min:6'
+        ]);
+
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+          return response()->json([
+            'msg'=>'You are logged in'
+          ]);
+        }
+        else{
+          return response()->json([
+            'msg'=>'Incorect login details'
+          ],401);
+        }
+
+    }
+    public function logout(Request $request)
+    {
+      Auth::logout();
+      return redirect('/login');
 
     }
 

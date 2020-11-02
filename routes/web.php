@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/','testControler@home');
+
 Route::post('/app/create_tag','AdminController@addTag');
 Route::get('/app/get_tags','AdminController@getTags');
 Route::post('/app/edit_tag','AdminController@editTag');
@@ -25,6 +25,15 @@ Route::post('/app/create_category','AdminController@addCategory');
 Route::get('/app/get_categories','AdminController@getCategories');
 Route::post('/app/edit_cat','AdminController@editCat');
 Route::post('/app/delete_cat','AdminController@deleteCat');
+Route::post('/app/create_user','AdminController@addUser');
+Route::get('/app/get_users','AdminController@getUsers');
+Route::post('/app/edit_user','AdminController@editUser');
+Route::post('/app/delete_user','AdminController@deleteUser');
+Route::post('/app/login','AdminController@login');
+
+Route::get('logout','AdminController@logout');
+Route::any('{slug}','AdminController@index');
+Route::get('/','AdminController@index');
 
 
 
@@ -32,6 +41,5 @@ Route::post('/app/delete_cat','AdminController@deleteCat');
 
 
 
-Route::get('/test','testControler@myFucntion');
 
-Route::any('{slug}','testControler@anyRoute');
+

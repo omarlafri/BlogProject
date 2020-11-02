@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\app",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
+    "\\resources",
+    "\\resources\\js",
+    "\\resources\\js\\admin",
+    "\\resources\\js\\admin\\components",
+    "\\resources\\js\\components",
+    "\\resources\\js\\components\\pages",
+    "\\resources\\js\\vuex"
+  ],
+  "SelectedNode": "\\resources\\js\\admin\\components\\deleteModal.vue",
+  "PreviewInSolutionExplorer": false
+}

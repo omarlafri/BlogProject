@@ -14,9 +14,14 @@ export default {
                     method: methode,
                     url: url,
                     data: dataO
-                  }); 
-            } catch (e) {
-                return e.response;
+                  }).catch(error => {
+
+                    return error.response
+                    
+                  })
+            } catch (error) {
+                console.error(error.response.data.errors);
+                return error.response ;
             }
            
         },
